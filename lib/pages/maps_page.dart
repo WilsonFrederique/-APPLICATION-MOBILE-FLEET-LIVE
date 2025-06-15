@@ -44,10 +44,6 @@ class _MapsPageState extends State<MapsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_mapError && kIsWeb) {
-      return _buildWebFallback();
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.position.vehiculeNom ?? 'Position sur la carte'),
@@ -69,23 +65,8 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   Widget _buildMapContent() {
-    if (_mapError) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 50, color: Colors.red),
-            const SizedBox(height: 20),
-            const Text('Impossible de charger la carte',
-                style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _openInExternalMaps,
-              child: const Text('Ouvrir dans Google Maps'),
-            ),
-          ],
-        ),
-      );
+    if (_mapError || kIsWeb) {
+      return _buildFallbackView();
     }
 
     return GoogleMap(
@@ -111,29 +92,26 @@ class _MapsPageState extends State<MapsPage> {
     );
   }
 
-  Widget _buildWebFallback() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.position.vehiculeNom ?? 'Carte'),
-        backgroundColor: const Color(0xFF023661),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.map, size: 50, color: Colors.blue),
-            const SizedBox(height: 20),
-            Text(
-              'Position: ${_position.latitude.toStringAsFixed(4)}, ${_position.longitude.toStringAsFixed(4)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _openInExternalMaps,
-              child: const Text('Ouvrir dans Google Maps'),
-            ),
-          ],
-        ),
+  Widget _buildFallbackView() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 50, color: Colors.red),
+          const SizedBox(height: 20),
+          const Text('Impossible de charger la carte',
+              style: TextStyle(fontSize: 18)),
+          const SizedBox(height: 20),
+          Text(
+            'Position: ${_position.latitude.toStringAsFixed(4)}, ${_position.longitude.toStringAsFixed(4)}',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _openInExternalMaps,
+            child: const Text('Ouvrir dans Google Maps'),
+          ),
+        ],
       ),
     );
   }
@@ -145,6 +123,10 @@ class _MapsPageState extends State<MapsPage> {
     } else {
       if (await canLaunchUrl(Uri.parse(url))) {
         await launchUrl(Uri.parse(url));
+      } else {
+        setState(() {
+          _mapError = true;
+        });
       }
     }
   }

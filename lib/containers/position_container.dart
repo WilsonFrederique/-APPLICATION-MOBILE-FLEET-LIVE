@@ -157,70 +157,12 @@ class _PositionContainerState extends State<PositionContainer> {
 
   Future<void> _showPositionOnMap(Position position) async {
     try {
-      if (kIsWeb) {
-        final staticMapUrl = _getStaticMapUrl(position);
-        if (staticMapUrl.isEmpty) {
-          throw Exception('Coordonnées invalides');
-        }
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Text(position.vehiculeNom ?? 'Position sur la carte'),
-                backgroundColor: const Color(0xFF023661),
-              ),
-              body: Stack(
-                children: [
-                  Center(
-                    child: Image.network(
-                      staticMapUrl,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.error_outline, size: 50, color: Colors.red),
-                              const SizedBox(height: 20),
-                              const Text('Impossible de charger la carte',
-                                  style: TextStyle(fontSize: 18)),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () => html.window.open(position.googleMapsUrl, '_blank'),
-                                child: const Text('Ouvrir dans Google Maps'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    right: 20,
-                    child: FloatingActionButton(
-                      onPressed: () => html.window.open(position.googleMapsUrl, '_blank'),
-                      backgroundColor: Colors.white,
-                      child: const Icon(Icons.open_in_new, color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MapsPage(position: position),
-          ),
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MapsPage(position: position),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
