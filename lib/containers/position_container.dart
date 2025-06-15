@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fleetlive/widgets/custom_scaffold.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_maps_flutter/google_maps_flutter.dart' show CameraPosition, GoogleMap, InfoWindow, LatLng, Marker, MarkerId;
+import 'package:universal_html/html.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 class Position {
   final int? id;
@@ -46,6 +50,14 @@ class Position {
     };
   }
 
+  LatLng toLatLng() {
+    return LatLng(latitude, longitude);
+  }
+
+  String get googleMapsUrl {
+    return 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+  }
+
   @override
   String toString() {
     return 'Position{id: $id, vehiculeId: $vehiculeId, lat: $latitude, lng: $longitude, time: $timestamp}';
@@ -67,6 +79,7 @@ class _PositionContainerState extends State<PositionContainer> {
   List<Position> _filteredPositions = [];
   final TextEditingController _searchController = TextEditingController();
   bool _isLoading = true;
+  Position? _selectedPosition;
 
   @override
   void initState() {
@@ -80,6 +93,7 @@ class _PositionContainerState extends State<PositionContainer> {
     super.dispose();
   }
 
+  // Chargement 
   Future<void> _loadPositions() async {
     // Simuler un chargement asynchrone
     await Future.delayed(const Duration(seconds: 1));
@@ -136,8 +150,21 @@ class _PositionContainerState extends State<PositionContainer> {
   Future<void> _refreshData() async {
     setState(() {
       _isLoading = true;
+      _selectedPosition = null;
     });
     await _loadPositions();
+  }
+
+  Future<void> _showPositionOnMap(Position position) async {
+    if (kIsWeb) {
+      // Solution pour le web
+      html.window.open(position.googleMapsUrl, '_blank');
+    } else {
+      // Solution pour mobile
+      setState(() {
+        _selectedPosition = position;
+      });
+    }
   }
 
   @override
@@ -149,6 +176,10 @@ class _PositionContainerState extends State<PositionContainer> {
       child: Column(
         children: [
           _buildHeader(),
+          if (!kIsWeb && _selectedPosition != null)
+            _buildMobileMapSection(_selectedPosition!),
+          if (kIsWeb && _selectedPosition != null)
+            _buildWebMapSection(_selectedPosition!),
           Expanded(
             child: _isLoading
                 ? _buildLoadingIndicator()
@@ -161,6 +192,7 @@ class _PositionContainerState extends State<PositionContainer> {
     );
   }
 
+  // Dernières positions & Icon initial 
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -191,6 +223,7 @@ class _PositionContainerState extends State<PositionContainer> {
     );
   }
 
+  // Rechercher par véhicule... 
   Widget _buildSearchField() {
     return TextField(
       controller: _searchController,
@@ -227,6 +260,7 @@ class _PositionContainerState extends State<PositionContainer> {
     );
   }
 
+  // Aucune position trouvée et Réinitialiser la recherche 
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -263,12 +297,16 @@ class _PositionContainerState extends State<PositionContainer> {
       child: ListView.builder(
         itemCount: _filteredPositions.length,
         itemBuilder: (context, index) {
-          return _buildPositionCard(_filteredPositions[index]);
+          return GestureDetector(
+            onTap: () => _showPositionOnMap(_filteredPositions[index]),
+            child: _buildPositionCard(_filteredPositions[index]),
+          );
         },
       ),
     );
   }
 
+  // Contenue ou Resultat 
   Widget _buildPositionCard(Position position) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -318,6 +356,7 @@ class _PositionContainerState extends State<PositionContainer> {
     );
   }
 
+  // Icone & Text color latitude et Longitude
   Widget _buildInfoItem(IconData icon, String text) {
     return Row(
       children: [
@@ -332,5 +371,92 @@ class _PositionContainerState extends State<PositionContainer> {
         ),
       ],
     );
+  }
+
+  Widget _buildMobileMapSection(Position position) {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: position.toLatLng(),
+            zoom: 14,
+          ),
+          markers: {
+            Marker(
+              markerId: MarkerId(position.id.toString()),
+              position: position.toLatLng(),
+              infoWindow: InfoWindow(
+                title: position.vehiculeNom ?? 'Véhicule ${position.vehiculeId}',
+                snippet: '${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}',
+              ),
+            ),
+          },
+          myLocationEnabled: true,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWebMapSection(Position position) {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          children: [
+            Image.network(
+              _getStaticMapUrl(position),
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: FloatingActionButton(
+                mini: true,
+                backgroundColor: Colors.white,
+                onPressed: () => html.window.open(position.googleMapsUrl, '_blank'),
+                child: const Icon(Icons.open_in_new, color: Colors.blue),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // GOOGLE Maps 
+  String _getStaticMapUrl(Position position) {
+    const apiKey = 'MY_GOOGLE_MAPS_API_KEY'; // Ici est mon clé API , mais MY_GOOGLE_MAPS_API_KEY est juste exemple
+    final lat = position.latitude;
+    final lng = position.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=14&size=600x300&maptype=roadmap&markers=color:red%7C$lat,$lng&key=$apiKey';
   }
 }
