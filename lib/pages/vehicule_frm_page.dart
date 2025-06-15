@@ -39,16 +39,16 @@ class Vehicule {
   }
 }
 
-class VehiculeFrmContainer extends StatefulWidget {
+class VehiculeFrmPage extends StatefulWidget {
   final Function(Vehicule)? onVehiculeAdded;
 
-  const VehiculeFrmContainer({super.key, this.onVehiculeAdded});
+  const VehiculeFrmPage({super.key, this.onVehiculeAdded});
 
   @override
-  State<VehiculeFrmContainer> createState() => _VehiculeFrmContainerState();
+  State<VehiculeFrmPage> createState() => _VehiculeFrmPageState();
 }
 
-class _VehiculeFrmContainerState extends State<VehiculeFrmContainer> {
+class _VehiculeFrmPageState extends State<VehiculeFrmPage> {
   final _formKey = GlobalKey<FormState>();
   final _nomController = TextEditingController();
   final _plaqueController = TextEditingController();
