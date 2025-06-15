@@ -53,14 +53,16 @@ class _SplashScreenState extends State<SplashScreen> {
           Positioned(
             bottom: mq.height * .13,
             width: mq.width,
-            child: const Text(
-              // 'FABRIQUÉ À MADAGASCAR AVEC 💖',
-              'BIENVENUE DANS FLEET LIVE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                letterSpacing: .5,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 23),
+              child: Text(
+                'BIENVENUE DANS LE SUIVI DE FLOTTE EN TEMPS RÉEL',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  letterSpacing: .5,
+                ),
               ),
             ),
           ),
