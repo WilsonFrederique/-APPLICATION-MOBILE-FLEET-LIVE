@@ -122,10 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Text(
-                  'FLEET LIVE',
+                  'SUIVI DE FLOTTE EN TEMPS RÉEL',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Application mobile de géolocalisation instantanée',
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Menu principal',
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -202,7 +202,12 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 30,
         ),
       ),
-      title: const Text('FLEET LIVE'),
+      title: const Text(
+        'SUIVI DE FLOTTE EN TEMPS RÉEL',
+        style: TextStyle(
+          fontSize: 17,
+        ),
+      ),
       actions: [
         IconButton(
           onPressed: () => _showMoreMenu(context),
