@@ -4,18 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fleetlive/widgets/custom_scaffold.dart';
 
-import '../screens/home_screens.dart'; // Importez votre HomeScreen
+import '../screens/home_screens.dart';
 
-class PositionFormContainer extends StatefulWidget {
+class PositionFrmPage extends StatefulWidget {
   final Function(Position)? onPositionAdded;
 
-  const PositionFormContainer({super.key, this.onPositionAdded});
+  const PositionFrmPage({super.key, this.onPositionAdded});
 
   @override
-  State<PositionFormContainer> createState() => _PositionFormContainerState();
+  State<PositionFrmPage> createState() => _PositionFrmPageState();
 }
 
-class _PositionFormContainerState extends State<PositionFormContainer> {
+class _PositionFrmPageState extends State<PositionFrmPage> {
   final _formKey = GlobalKey<FormState>();
   final _vehiculeController = TextEditingController();
   final _latitudeController = TextEditingController();

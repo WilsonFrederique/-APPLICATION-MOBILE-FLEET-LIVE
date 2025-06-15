@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fleetlive/widgets/custom_scaffold.dart';
 
-import 'vehicule_frm_container.dart';
+import '../pages/vehicule_frm_page.dart';
 
 class Vehicule {
   final int id;
@@ -197,7 +197,7 @@ class _VehiculeContainerState extends State<VehiculeContainer> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const VehiculeFrmContainer()),
+                    MaterialPageRoute(builder: (_) => const VehiculeFrmPage()),
                   );
                 },
               ),
