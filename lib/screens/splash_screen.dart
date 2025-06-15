@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
             bottom: mq.height * .13,
             width: mq.width,
             child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 23),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: Text(
                 'BIENVENUE DANS LE SUIVI DE FLOTTE EN TEMPS RÉEL',
                 textAlign: TextAlign.center,
