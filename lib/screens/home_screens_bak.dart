@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fleetlive/containers/historique_container.dart';
 import 'package:fleetlive/containers/position_container.dart';
@@ -203,12 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 30,
         ),
       ),
-      title: const Text(
-        'SUIVI DE FLOTTE EN TEMPS RÉEL',
-        style: TextStyle(
-          fontSize: 17,
-        ),
-      ),
+
       actions: [
         IconButton(
           onPressed: () => _showMoreMenu(context),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fleetlive/widgets/custom_scaffold.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_maps_flutter/google_maps_flutter.dart' show CameraPosition, GoogleMap, InfoWindow, LatLng, Marker, MarkerId;
-import 'package:universal_html/html.dart' as html;
 import 'package:fleetlive/pages/maps_page.dart';
 
 class Position {

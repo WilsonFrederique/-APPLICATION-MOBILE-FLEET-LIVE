@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'firebase_options.dart';
+import 'screens/home_screen.dart';
+import 'screens/auth_screen.dart';
 
 late Size mq;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // IMPORTANT : initialise Flutter binding
+  WidgetsFlutterBinding.ensureInitialized(); // Initialize Flutter binding
 
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // Optional: Enable immersive mode (uncomment if needed)
+  // await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((value) {
+  // Lock device orientation (optional)
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     runApp(const MyApp());
-  });
+  } catch (e) {
+    // Handle Firebase initialization errors (e.g., show an error screen)
+    runApp(const MaterialApp(home: Center(child: Text('Firebase init failed'))));
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'The ChatWils',
+      title: 'Surveillance de Flotte',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           centerTitle: true,
@@ -35,7 +53,19 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.blue,
         ),
       ),
-      home: const SplashScreen(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return HomeScreen();
+          } else {
+            return AuthScreen();
+          }
+        },
+      ),
     );
   }
 }
