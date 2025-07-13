@@ -74,38 +74,91 @@ class _MainLayoutState extends State<MainLayout> {
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),
-          border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 16,
+              spreadRadius: 2,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
           child: BottomNavigationBar(
             currentIndex: _currentIndex,
             selectedItemColor: themeColor,
-            unselectedItemColor: Colors.grey,
+            unselectedItemColor: Colors.grey[600],
             type: BottomNavigationBarType.fixed,
+            elevation: 0,
+            backgroundColor: Colors.white,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            selectedLabelStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              height: 1.5,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+            ),
+            selectedIconTheme: IconThemeData(
+              size: 28,
+              color: themeColor,
+            ),
+            unselectedIconTheme: IconThemeData(
+              size: 26,
+              color: Colors.grey[600],
+            ),
             onTap: (index) => setState(() => _currentIndex = index),
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.map),
+                icon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.map_outlined),
+                ),
+                activeIcon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.map),
+                ),
                 label: 'Carte',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.directions_car),
+                icon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.directions_car_outlined),
+                ),
+                activeIcon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.directions_car),
+                ),
                 label: 'Véhicules',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.history),
+                icon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.history_outlined),
+                ),
+                activeIcon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.history),
+                ),
                 label: 'Historique',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
+                icon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.person_outline),
+                ),
+                activeIcon: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: const Icon(Icons.person),
+                ),
                 label: 'Profil',
               ),
             ],
