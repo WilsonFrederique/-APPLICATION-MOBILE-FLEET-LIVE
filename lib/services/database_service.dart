@@ -37,7 +37,6 @@ class DatabaseService {
   }
 
   // Positions services
-
   Future<void> saveCurrentPosition(String uid, PositionData data) async {
     final timestampKey = DateTime.now().millisecondsSinceEpoch.toString();
     await _db.child('locations/$uid').set(data.toMap());
