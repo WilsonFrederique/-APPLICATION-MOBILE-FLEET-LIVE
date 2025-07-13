@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/vehicle_model.dart';
-import '../models/user_model.dart';  // Pour AppUser
+import '../models/user_model.dart';
 import '../services/database_service.dart';
 
 class VehicleScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
   void _loadData() {
     _vehiclesFuture = _dbService.getAllVehicles();
-    _usersFuture = _dbService.getAllUsers(); // A implémenter si pas encore fait
+    _usersFuture = _dbService.getAllUsers();
   }
 
   Future<void> _showVehicleDialog({Vehicle? vehicle}) async {

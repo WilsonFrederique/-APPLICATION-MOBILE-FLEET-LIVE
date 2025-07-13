@@ -4,8 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'firebase_options.dart';
-import 'screens/home_screen.dart';
 import 'screens/auth_screen.dart';
+import 'screens/main_navigation.dart';
 
 late Size mq;
 
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            return HomeScreen();
+            return MainLayout();
           } else {
             return AuthScreen();
           }
