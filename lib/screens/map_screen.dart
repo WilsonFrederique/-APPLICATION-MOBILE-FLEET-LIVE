@@ -145,23 +145,24 @@ class _MapScreenState extends State<MapScreen> {
       body: _currentPosition == null
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: _currentPosition!,
-          zoom: 16,
-        ),
-        myLocationEnabled: true,
-        onMapCreated: (controller) {
-          _mapController = controller;
-        },
-        markers: {
-          Marker(
-            markerId: const MarkerId('current'),
-            position: _currentPosition!,
-            infoWindow: const InfoWindow(title: 'Position'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          ),
-          ..._userMarkers.values,
-        },
+            mapType: MapType.satellite,
+            initialCameraPosition: CameraPosition(
+              target: _currentPosition!,
+              zoom: 16,
+            ),
+            myLocationEnabled: true,
+            onMapCreated: (controller) {
+                  _mapController = controller;
+            },
+            markers: {
+              Marker(
+                markerId: const MarkerId('current'),
+                position: _currentPosition!,
+                infoWindow: const InfoWindow(title: 'Ma position'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+              ),
+              ..._userMarkers.values,
+            },
       ),
     );
   }
