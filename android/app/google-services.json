@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "600714684660",
+    "firebase_url": "https://flutter-app-yiarth-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "flutter-app-yiarth",
+    "storage_bucket": "flutter-app-yiarth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600714684660:android:b770a038ad9ac1d1f256a1",
+        "android_client_info": {
+          "package_name": "com.example.fleetlive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR00Nm8ujgKyhg83tkjtpkeQ9lKZGUVmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
