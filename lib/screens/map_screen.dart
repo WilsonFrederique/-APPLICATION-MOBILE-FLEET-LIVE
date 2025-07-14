@@ -79,42 +79,50 @@ class _MapScreenState extends State<MapScreen> {
 
       final Map<String, Marker> newMarkers = {};
 
+      const inactiveThresholdMinutes = 5;
+
       locationsMap.forEach((userId, locData) {
         try {
           final lat = locData['lat'];
           final lng = locData['lng'];
-          if (lat != null && lng != null) {
-            // Chercher le véhicule associé à ce driverId = userId
+          final timestampStr = locData['timestamp'];
+
+          if (lat != null && lng != null && timestampStr != null) {
             final vehicleEntry = _vehicles.entries.firstWhere(
                   (entry) => entry.value['driverId'] == userId,
               orElse: () => MapEntry('', null),
             );
 
-            String vehicleName = vehicleEntry.value != null ? vehicleEntry.value['name'] ?? 'Véhicule inconnu' : 'Véhicule inconnu';
-            String plateNumber = vehicleEntry.value != null ? vehicleEntry.value['plateNumber'] ?? '' : '';
+            if (vehicleEntry.value == null) return;
 
-            // Chercher le conducteur dans users
+            final timestamp = DateTime.tryParse(timestampStr);
+            final now = DateTime.now();
+            final isInactive = timestamp == null || now.difference(timestamp).inMinutes > inactiveThresholdMinutes;
+
+            String vehicleName = vehicleEntry.value['name'] ?? 'Véhicule inconnu';
+            String plateNumber = vehicleEntry.value['plateNumber'] ?? '';
+
             final userData = _users[userId];
             String driverName = userData != null ? userData['name'] ?? 'Conducteur inconnu' : 'Conducteur inconnu';
-
-            // final infoWindowText = '$vehicleName\nPlaque: $plateNumber\nConducteur: $driverName';
 
             final marker = Marker(
               markerId: MarkerId(userId),
               position: LatLng(lat, lng),
               infoWindow: InfoWindow(
                 title: vehicleName,
-                snippet: 'Plaque: $plateNumber\nConducteur: $driverName',
+                snippet: 'Plaque: $plateNumber, Conducteur: $driverName',
               ),
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueAzure,
+                isInactive
+                    ? BitmapDescriptor.hueYellow  // Couleur inactive
+                    : BitmapDescriptor.hueAzure,   // Couleur active
               ),
             );
 
             newMarkers[userId] = marker;
           }
         } catch (e) {
-          // Ignore malformed data
+          // ignore les erreurs
         }
       });
 
